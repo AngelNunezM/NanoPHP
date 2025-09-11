@@ -48,21 +48,35 @@ trait HTTP
     }
 
     /**
-     * Verifica si la request actual es de tipo JSON.
+     * Determina si la request actual es de tipo JSON.
      *
-     * Este método es útil para diferenciar solicitudes API de solicitudes web normales.
-     * Comprueba la cabecera 'Content-Type' de la petición HTTP.
+     * Este método permite diferenciar entre solicitudes de tipo API y solicitudes web tradicionales.
+     * Verifica tanto la cabecera 'Content-Type' como la cabecera 'Accept' para mayor compatibilidad.
      *
-     * @return bool Retorna true si la request tiene Content-Type 'application/json', false en caso contrario.
+     * Comportamiento:
+     * - Devuelve true si 'Content-Type' incluye 'application/json'.
+     * - Devuelve true si 'Accept' incluye 'application/json'.
+     * - Devuelve false en cualquier otro caso.
+     *
+     * Esto es útil para:
+     * - Decidir si responder con JSON (para clientes API, AJAX, Postman, etc.).
+     * - Decidir si redirigir o mostrar una vista HTML en aplicaciones híbridas.
+     *
+     * @return bool True si la request es JSON, false si no lo es.
      */
     private function isJsonRequest(): bool
     {
+        // Obtener la cabecera Content-Type (tipo de contenido enviado)
         $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+
+        // Obtener la cabecera Accept (tipo de contenido que el cliente espera recibir)
         $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
 
+        // Comprobar si alguna de las cabeceras indica JSON
         return stripos($contentType, 'application/json') !== false
             || stripos($accept, 'application/json') !== false;
     }
+
 
     /**
      * Redirige al usuario a una ruta específica dentro del sitio.
