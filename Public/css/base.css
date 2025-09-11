@@ -1,0 +1,505 @@
+/* Reset CSS básico y moderno */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+    --color-background: #050b0f;
+    --color-principal: #0084d1;
+}
+
+html, body {
+    height: 100%;
+    font-family: "Inter", sans-serif;
+    background-color: var(--color-background);
+}
+
+body {
+  line-height: 1.2;
+  -webkit-font-smoothing: antialiased;
+
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+    background-color: transparent;
+    padding: .5rem;
+    border-radius: .5rem;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+
+a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+    background-color: transparent;
+    padding: .6rem;
+    border-radius: .5rem;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+
+#root, #__next {
+  isolation: isolate;
+}
+
+/***** modales, alertas, etc *****/ 
+.alert {
+    display: flex;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: .6rem 1rem;
+    border-radius: .5rem;
+    font-size: .8rem;
+    font-weight: 500;
+    color: white;
+
+    /* 👉 Sombra moderna */
+    box-shadow: 0 4px 12px #3c3c3cc5;
+}
+
+ /***** End modales, alertas, etc *****/
+
+
+/***** Login *****/ 
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+.container_image {
+    height: 100%;
+}
+
+.container_image img {
+    height: 100%;
+    object-fit: cover;
+}
+
+.container_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 2em;
+    width: 35%;
+}
+
+.container_form_logo {
+    display: flex;
+}
+
+.container_form_logo img {
+    max-width: 100px;   /* ancho máximo */
+    height: auto;       /* mantiene proporción */
+}
+
+.container_form_copyright {
+    color: #3a4f5c;
+    font-size: .7rem;
+}
+
+.container_form form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.container_form_header {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.container_form_header h1{
+    color: white;
+    font-weight: 600;
+    font-size: 2.2rem;
+}
+
+.container_form_header span{
+    color: #4e8fb6;
+    font-weight: 500;
+    font-size: .8rem;
+}
+
+.container_form_input {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.container_form_input label {
+    color: #4c6676;
+    font-size: .7rem;
+    font-weight: 700;
+} 
+
+.container_form_input input {
+    color: white;
+    padding: .7rem;
+    border-radius: .5rem;
+    background-color:rgb(9, 14, 17);
+    border:none;
+    border-bottom: 1px solid #223039;
+    outline: none;
+    font-size: 1rem;
+    transition: all .2s ease-in-out;
+} 
+
+.container_form_input input::placeholder {
+    color: #334651;
+} 
+
+.container_form_input input:focus {
+    border-color: #0084d1;
+    transition: all .2s ease-in-out;
+} 
+
+.container_form_button {
+    padding: .7rem;
+    border-radius: .5rem;
+    color: white;
+    background-color: var(--color-principal);
+    border: 1px solid;
+    border-top-color: #26adfb;
+    border-right-color: #055d90;
+    border-bottom-color: #014064;
+    border-left-color: #59c1fe;
+    justify-content: center;
+}
+
+.container_form_button:hover {
+    background-color: #27aaf6;
+    transition: all .2s ease-in-out;
+}
+/***** End Login *****/
+
+
+/***** NavBar *****/ 
+.dash_container {
+    display: flex;
+    flex-direction: row;
+}
+
+.aside_app {
+    height: 100vh;
+    padding: 1rem;
+    width: 20%;
+    background-color:#03070a;
+    border-right: 2px solid #010102;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.aside_app_content_header {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #0b1823;
+    gap: 1rem;
+}
+
+.aside_app_content_header-container {
+    display: flex;
+    width: fit-content;
+}
+
+.aside_app_content_header-container img {
+    max-width: 6rem;
+    height: auto;  
+}
+
+.aside_app_content_header_avatar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem;
+    border: 1px solid #0e1822;
+    background-color: #080F15;
+}
+
+.aside_app_content_header_avatar:hover {
+    border: 1px solid #0c2034;
+    background-color: #0a121a;
+}
+
+
+.aside_app_content_header_avatar figure img{
+    max-width: 2rem;
+    height: auto;  
+}
+
+.aside_app_content_header_avatar div{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.aside_app_content_header_avatar div span{
+    color: var(--color-principal);
+    font-size: .7rem;
+}
+
+.aside_app_content_header_avatar div p{
+    color:white;
+    font-size: .9rem;
+}
+
+.aside_app_content_body {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+}
+
+.content {
+    border-left: 2px solid #0c1922;
+    width: 100%;
+    padding: 1rem;
+}
+
+.aside_app_footer_button {
+    padding: .5rem;
+    width: 100%;
+    border-radius: .5rem;
+    background-color: transparent;
+    color: #5f6466;
+    font-weight: 600;
+    font-size: .9rem;
+    border: none;
+    transition: all .2s  ease-in-out;
+    cursor: pointer;
+}
+
+.aside_app_footer_button:hover {
+    background-color: transparent;
+    transition: all .2s  ease-in-out;
+    background-color: #080f15;
+    color: rgb(204, 202, 202);
+}
+/***** End NavBar *****/
+
+
+/***** Dashboard *****/ 
+.dash_container_content {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.dash_container_content_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #10171c;
+}
+
+.dash_container_content_header div {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.dash_container_content_header h1 {
+    color: white;
+    font-size: 2.2rem;
+}
+
+.dash_container_content_header span{
+    color: #919191;
+    font-size: .9em;
+    font-weight: 500;
+}
+
+.dash_container_content_header nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+}
+
+.notification {
+    color: rgb(137, 137, 137) !important;
+    border: 1px solid transparent !important;
+    background-color: transparent !important;
+}
+
+.notification:hover {
+    color: rgb(255, 255, 255) !important;
+    background-color: #0a151f !important;
+    border: 1px solid transparent !important;
+}
+
+.dash_container_content_header nav button {
+    color: white;
+    background-color: var(--color-principal);
+    border: 1px solid;
+    border-top-color: #26adfb;
+    border-right-color: #055d90;
+    border-bottom-color: #014064;
+    border-left-color: #59c1fe;
+    font-size: .9rem;
+}
+
+.dash_container_content_header nav button:hover {
+    background-color: #27aaf6;
+    transition: all .2s ease-in-out;
+}
+
+.dash_container_content_body {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.dash_container_content_body_info {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    border-radius: .5rem;
+}
+
+.dash_container_content_body_info span {
+    color: rgb(202, 202, 202);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.dash_container_content_body_info p {
+    color: rgb(144, 144, 144);
+    font-size: .8rem;
+}
+
+.dash_container_content_body_kpi {
+    display: flex;
+    flex-direction: row;
+    gap: .2rem;
+}
+
+.dash_container_content_body_kpi_card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #0a1015;
+    border-radius: .5rem;
+    border: 1px solid transparent;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+    gap: .7rem;
+    width: 100%;
+}
+
+.dash_container_content_body_kpi_card:hover {
+    border-color: #18232e;
+    transition: all .2s ease-in-out;
+}
+
+.dash_container_content_body_kpi_card_header {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    color: white;
+}
+
+.dash_container_content_body_kpi_card_header h2 {
+    font-weight: 500;
+}
+
+.dash_container_content_body_kpi_card_footer {
+    display: flex;
+    flex-direction: column;
+    color: rgb(181, 181, 181);
+    gap: .2rem;
+}
+
+.dash_container_content_body_kpi_card_footer .span-1 {
+    color: var(--color-principal);
+}
+
+.dash_container_content_body_kpi_card_footer .span-2 {
+    color: rgb(89, 89, 89);
+    font-size: .8rem;
+}
+/***** End Dashboard *****/
+
+/***** Error404 *****/ 
+.error_container {
+      text-align: center;
+      max-width: 600px;
+      padding: 2rem;
+    }
+
+    .error_code {
+      font-size: 6rem;
+      font-weight: 700;
+      color: #26adfb;
+      margin: 0;
+      animation: bounce 1s infinite alternate;
+    }
+
+    .error_message {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .error_description {
+      font-size: 1rem;
+      color: #718093;
+      margin-bottom: 2rem;
+    }
+
+    .error_link {
+      display: inline-block;
+      padding: 0.7rem 1.5rem;
+      border-radius: 0.5rem;
+      background: var(--color-principal);
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .error_link:hover {
+      background: #59c1fe;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-10px); }
+    }
+/***** End Error404 *****/
