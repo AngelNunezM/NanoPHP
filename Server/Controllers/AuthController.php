@@ -30,7 +30,7 @@ class AuthController {
     public function login() : void 
     {
         $request = $this->request();
-        var_dump($request);
+
         try {
             $user = new User();
             $user->username = $request['username'];

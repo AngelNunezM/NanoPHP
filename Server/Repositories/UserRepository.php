@@ -27,6 +27,7 @@ class UserRepository {
         $user->id = $response['id'];
         $user->name = $response['name'];
         $user->username = $response['username'];
+        $user->email = $response['email'];
         $user->password = $response['password'];
         $user->role = $response['role'];
         $user->active = $response['active'];
@@ -35,10 +36,11 @@ class UserRepository {
 
     public function add(User $user): bool
     {
-        $consult = $this->context->prepare("INSERT INTO users(name, username, password, role) VALUES(:name, :username, :password, :role)");
+        $consult = $this->context->prepare("INSERT INTO users(name, username, email, password, role) VALUES(:name, :username, :email, :password, :role)");
         $consult->execute([
             "name" => $user->name,
             "username" => $user->username,
+            "email" => $user->email,
             "password" => $user->password,
             "role" => $user->role
         ]);

@@ -26,10 +26,21 @@ class UserController {
             $user = new User();
             $user->name = $request['name'];
             $user->username = $request['username'];
+            $user->email = $request['email'];
             $user->password = password_hash($request['password'],  PASSWORD_BCRYPT);
             $user->role = $request['role'];
 
-            $this->userService->createUser($user);
+            if($this->userService->createUser($user)){
+                $this->response([
+                    "success" => true,
+                    "message" => "Usuario creado exitosamente"
+                ], 201);
+            } else {
+                $this->response([
+                    "success" => false,
+                    "No se logro crear el usuario"
+                ], 400);
+            }
         } catch (Exception $ex) {
             // Respuesta según tipo de request
             if ($this->isJsonRequest()) {
