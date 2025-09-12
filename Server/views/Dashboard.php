@@ -23,7 +23,7 @@
             </article>
             <article class="dash_container_content_body">
                 <div class="dash_container_content_body_info">
-                    <span>Hola, Angel de Jesus 🖐🏻</span>
+                    <span>Hola, <?= $user['name'] ?> 🖐🏻</span>
                     <p>A continuación te presentamos los KPI´s de la semana de manera general.</p>
                 </div>
                 <div class="dash_container_content_body_kpi">

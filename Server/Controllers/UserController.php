@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\helpers\HTTP;
-use App\Core\Middlewares\AuthMiddleware;
+use App\Core\Middlewares\Authentication;
 use App\Core\View;
 use App\Models\User;
 use App\Services\UserService;
@@ -20,7 +20,9 @@ class UserController {
 
     public function create(): void
     {
-        $request = $this->request();
+        Authentication::verify(); // Protegemos esta ruta para asegurar que se tenga que estar autenticado
+
+        $request = $this->request(); // Obtenemos la request
 
         try {
             $user = new User();

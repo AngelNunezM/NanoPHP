@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Config\ContextDB;
 use App\Models\User;
 use PDO;
+
 class UserRepository {
     
     private PDO $context;

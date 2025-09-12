@@ -1,4 +1,7 @@
-<?php $title = ": Inicio de sesión"; ?>
+<?php 
+$title = $title ?? ""; 
+$user = $_SESSION['user'] ?? '';
+?>
 
 <!DOCTYPE html>
 <html lang="es">

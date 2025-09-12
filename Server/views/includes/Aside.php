@@ -9,8 +9,8 @@
                     <img src="./assets/images/profile.png" alt="Foto de perfil del usuario">
                 </figure>
                 <div>
-                    <span>Administrador</span>
-                    <p>Angel de Jesus</p>
+                    <span><?= $user['role'] ?></span>
+                    <p><?= $user['username'] ?></p>
                 </div>
             </button>
         </div>
