@@ -1,6 +1,6 @@
 {
-  "name": "m2m/project-2025",
-  "description": "Proyecto para la gestión de proyectos de construcción de M2M",
+  "name": "byangel/nanophp",
+  "description": "Micro Framework basado en php 8.2",
   "type": "project",
   "autoload": {
     "psr-4": {

@@ -8,7 +8,7 @@ class Config
     {
         return [
             // Base URL de tu proyecto (apunta a la carpeta Public)
-            'base_url' => '/M2M-Proyect-2025/Public'
+            'base_url' => '/NanoPHP/Public'
         ];
     }
 }

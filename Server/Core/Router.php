@@ -116,7 +116,7 @@ class Router
             $requestMethod = strtoupper($_POST['_method']);
         }
 
-        $scriptName = dirname($_SERVER['SCRIPT_NAME']); // Ejemplo: /M2M-Project-2025/Public
+        $scriptName = dirname($_SERVER['SCRIPT_NAME']); // Ejemplo: /NanoPHP/Public
         $requestPath = parse_url($requestUri, PHP_URL_PATH);
 
         // Eliminar prefijo de subdirectorio

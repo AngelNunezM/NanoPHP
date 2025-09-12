@@ -33,7 +33,7 @@ class ContextDB
     /**
      * @var string Nombre de la base de datos
      */
-    private string $dbname = "m2mdb";
+    private string $dbname = "example";
 
     /**
      * @var string Usuario de la base de datos
