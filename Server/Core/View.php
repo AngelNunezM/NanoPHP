@@ -35,6 +35,6 @@ class View
         extract($params);
 
         // Incluir la vista correspondiente
-        include __DIR__ . "/../views/{$template}.php";
+        include __DIR__ . "/../Views/{$template}.php";
     }
 }
