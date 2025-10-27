@@ -1,32 +1,36 @@
 <?php include_once __DIR__.'/../includes/Header.php'; ?>
-    <main class="container">
-        <div class="container_form">
-            <figure class="container_form_logo">
-                <img src="./assets/icons/m2m_blanco.png" alt="Logo de M2M">
-            </figure>
-            <?php if (!empty($error)): ?>
-                <p class="alert" style="background-color: rgb(231, 58, 58); color: white; "><?= htmlspecialchars($error) ?></p>
-            <?php endif; ?>
-
-            <form method="POST" action="login">
-                <div class="container_form_header">
-                    <h1 class="container_form_header_title">Inicio de sesión </h1>
-                    <span class="container_form_header_subtitle">Accede con tus credenciales.</span>
-                </div>
-                <div class="container_form_input input_container">
-                    <label for="username">Usuario</label>
-                    <input type="text" name="username" id="username" placeholder="DMora_aws" required>
-                </div>
-                <div class="container_form_input input_container">
-                    <label for="password">Contraseña</label>
-                    <input type="password" name="password" id="password" placeholder="********" required>
-                </div>
-                <button type="submit" class="container_form_button">Iniciar sesión</button>
-            </form>
-            <span class="container_form_copyright">Todos los derechos reservados @M2M - MoveToMexico 2025</span>
-        </div>
-        <figure class="container_image">
-            <img src="./assets/images/background_login.png" alt="">
+    <main class="flex flex-col h-screen w-screen overflow-hidden justify-center items-center">
+        <figure class="fixed top-4 left-4">
+            <img src="./assets/icons/m2m_verde.png" alt="Logo de M2M" class="w-24">
         </figure>
+        <?php if (!empty($error)): ?>
+            <div class="fixed right-2 left-2 top-4 flex justify-center">
+                <p class="p-3 text-sm text-red-500 bg-red-100 backdrop-blur-md rounded-xl w-fit font-medium"><?= htmlspecialchars($error) ?></p>
+            </div>
+        <?php endif; ?>
+        <div class=" flex justify-center items-center xs:w-11/12 sm:w-7/12 lg:w-4/12">
+            <form method="POST" action="login" class="flex flex-col gap-6 w-full">
+                <div class="flex flex-col">
+                    <h2 class="font-medium text-zinc-600"><span class="text-[#393784]">M</span><span class="text-[#01911E]">2M</span> Cloud</h2>
+                    <h1 class="text-zinc-900 font-bold uppercase text-3xl">Inicio de sesión </h1>
+                    <span class="text-zinc-500 text-sm mt-2">La plataforma para la gestión de proyectos de <a href="https://m2m.com.mx/" target="_blank" class="font-medium text-zinc-800">Move To México</a>.</span>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col items-start w-full gap-1">
+                        <label for="username" class="text-zinc-500 text-sm">Usuario</label>
+                        <input id="name" type="text" name="username" id="username" placeholder="DMora_aws" required class="text-zinc-700 p-2 border border-zinc-200 rounded-lg bg-zinc-50 w-full outline-none focus:bg-zinc-100 transition-all ease-in-out"/>
+                    </div>
+                    <div class="flex flex-col items-start w-full gap-1">
+                        <label for="password" class="text-zinc-500 text-sm">Contraseña</label>
+                        <input id="name"  type="password" name="password" id="password" placeholder="********" required class="text-zinc-700 p-2 border border-zinc-200 rounded-lg bg-zinc-50 w-full outline-none focus:bg-zinc-100 transition-all ease-in-out"/>
+                    </div>
+                    <button type="submit" class="bg-zinc-900 cursor-pointer p-2 rounded-md text-white font-medium hover:bg-zinc-800 hover:scale-102 transition-all ease-in-out">Iniciar sesión</button>
+                </div>
+            </form>
+        </div>
+            
+        <div class="fixed bottom-2 w-full flex justify-center">
+            <span class="text-[#8b8b8b] text-xs text-nowrap">Todos los derechos reservados @M2M - 2025</span>
+        </div>
     </main>
 <?php include_once __DIR__.'/../includes/Footer.php'; ?>

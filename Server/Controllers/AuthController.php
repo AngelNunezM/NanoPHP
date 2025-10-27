@@ -16,15 +16,16 @@ class AuthController {
 
     public function __construct() {
         $this->authService = new AuthService(); // Instancia directa del servicio
-        session_start(); //Inicialización de la sesión
+        session_start();
     }
 
     public function index(): void
     {
         if(!empty($_SESSION['user'])){
             $this->redirect('/');
+        } else {
+            View::render('auth/Login');
         }
-        View::render('auth/Login');
     }
 
     public function login() : void 
@@ -32,9 +33,10 @@ class AuthController {
         $request = $this->request();
 
         try {
-            $user = new User();
-            $user->username = $request['username'];
-            $user->password = $request['password'];
+            $user = new User([
+                'username' => $request['username'],
+                'password' => $request['password']
+            ]);
 
             $authResult = $this->authService->authenticate($user);
 
@@ -47,14 +49,14 @@ class AuthController {
             } else {
                 $this->redirect('/');
             }
-
+            
         } catch (Exception $ex) {
             // Respuesta según tipo de request
             if ($this->isJsonRequest()) {
                 $this->response([
                     'success' => false,
                     "message" => $ex->getMessage()
-                ], 401);
+                ], $ex->getCode());
             } else {
                 View::render('auth/Login', ['error' => $ex->getMessage()]);
             }

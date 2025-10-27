@@ -1,1 +1,1 @@
-console.log("onload");
+console.log("NanoPHP Main JS Loaded");

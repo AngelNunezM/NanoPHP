@@ -24,42 +24,36 @@ class AuthService {
         $isExistUser = $this->userRepository->findBy('username', $user->username);
 
         if(!$isExistUser || !password_verify($user->password, $isExistUser->password)) { 
-            throw new Exception("Credenciales Invalidas.");
+            throw new Exception("Credenciales Invalidas.", 401);
         }
 
+        $jwtData = jwtConfig::get();
+
+        // ---- JWT PARA JSON ----
+        $payload = [
+            'sub' => $isExistUser->id,
+            'username' => $isExistUser->username,
+            'role' => $isExistUser->role,
+            'iat' => time(),
+            'exp' => time() + $jwtData['expires_in']
+        ];
+
+        $token = JWT::encode($payload, $jwtData['secret'], 'HS256');
+
+
         if($this->isJsonRequest()){
-            $jwtData = jwtConfig::get();
-
-            // ---- JWT PARA JSON ----
-            $payload = [
-                'sub' => $isExistUser->id,
-                'username' => $isExistUser->username,
-                'role' => $isExistUser->role,
-                'iat' => time(),
-                'exp' => time() + $jwtData['expires_in']
-            ];
-
-            $token = JWT::encode($payload, $jwtData['secret'], 'HS256');
-
             return [
                 'user' => $isExistUser,
                 'token' => $token
             ];
         } else {
+            session_start(); //Inicialización de la sesión
+            
             // ---- SESIÓN PARA HTML ----
-            $_SESSION['user'] = [
-                'id' => $isExistUser->id,
-                'name' => $isExistUser->name,
-                'username' => $isExistUser->username,
-                'role' => $isExistUser->role,
-                'active' => $isExistUser->active
-            ];
+            $_SESSION['user'] = $isExistUser;
+            $_SESSION['token'] = $token;
 
             return null;
         }
-    }
-
-    public function destroySession() {
-
     }
 }

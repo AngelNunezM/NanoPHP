@@ -1,6 +1,13 @@
+# Activa el motor de re escritura de Apache
 RewriteEngine On
 
+# Condición 1: si el recurso solicitado NO es un archivo físico
 RewriteCond %{REQUEST_FILENAME} !-f
+
+# Condición 2: si el recurso solicitado NO es un directorio real
 RewriteCond %{REQUEST_FILENAME} !-d
 
+# Regla: cualquier otra petición será redirigida a index.php
+# [QSA] conserva los parámetros de la query string (?foo=bar)
+# [L] indica que esta es la última regla a aplicar si se cumple
 RewriteRule ^ index.php [QSA,L]

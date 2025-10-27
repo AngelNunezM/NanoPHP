@@ -1,6 +1,6 @@
 {
-  "name": "byangel/nanophp",
-  "description": "Micro Framework basado en php 8.2",
+  "name": "m2m/project-2025",
+  "description": "Proyecto para la gestión de proyectos de construcción de M2M",
   "type": "project",
   "autoload": {
     "psr-4": {
@@ -8,6 +8,7 @@
     }
   },
   "require": {
-    "firebase/php-jwt": "^6.11"
+    "firebase/php-jwt": "^6.11",
+    "vlucas/phpdotenv": "^5.6"
   }
 }

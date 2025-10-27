@@ -6,95 +6,108 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Config\Jwt as jwtConfig;
 use App\Core\View;
+use App\Models\User;
 
 /**
- * Class AuthMiddleware
+ * Class Authentication
  *
- * Middleware para proteger rutas verificando:
- * 1. Sesión de usuario activa.
- * 2. Token JWT válido en la cabecera Authorization.
+ * Middleware para proteger rutas verificando la autenticación y autorización del usuario.
+ * 
+ * Este middleware verifica:
+ * 1. Si existe una sesión activa de usuario.
+ * 2. Si existe un token JWT válido en la cabecera Authorization.
+ * 3. Si el usuario tiene los roles requeridos (opcional).
  *
  * Uso:
- * Colocar `AuthMiddleware::handle();` al inicio de un controlador o ruta protegida.
+ * Colocar `Authentication::verify(['Rol1', 'Rol2'])` al inicio de un método de controlador o ruta protegida.
+ *
+ * Ejemplos:
+ * - Authentication::verify(); // Solo verifica autenticación
+ * - Authentication::verify(['Administrador']); // Verifica autenticación y rol específico
  */
 class Authentication
 {
-    /**
-     * Verifica si hay sesión activa o un token JWT válido.
-     *
-     * - Si hay sesión, permite continuar.
-     * - Si hay token JWT válido, decodifica el token, crea la sesión y permite continuar.
-     * - Si no hay sesión ni token válido, devuelve un 401 Unauthorized en formato JSON.
-     *
-     * @return void
-     */
-    public static function verify(): void
+
+    public static ?User $user = null;
+
+    public static function verify(array $roles = []): ?bool
     {
-        // Iniciar sesión si no está iniciada
-        session_start();
-
-        // Obtener configuración JWT (por ejemplo, la clave secreta)
-        $config = jwtConfig::get();
-
-        // --- 1. Verificar sesión ---
-        if (isset($_SESSION['user'])) {
-            // Usuario ya logueado, permite continuar
-            return ;
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
 
-        // --- 2. Verificar token JWT en la cabecera Authorization ---
+        $config = jwtConfig::get();
+
+        if (isset($_SESSION['user'])) {
+            self::$user = $_SESSION['user'];
+
+            if (!empty($roles) && !in_array(self::$user->role->name, $roles)) {
+                self::deny("No tienes permiso para acceder a este recurso", 403);
+            }
+            return true;
+        }
+
         $headers = getallheaders();
         $token = $headers['Authorization'] ?? null;
 
         if ($token) {
             try {
-                // Extraer el token si viene con el prefijo "Bearer "
                 if (str_starts_with($token, 'Bearer ')) {
                     $token = substr($token, 7);
                 }
 
-                // Decodificar el token usando la clave secreta y algoritmo HS256
                 $decoded = JWT::decode($token, new Key($config['secret'], 'HS256'));
 
-                // Guardar información del usuario en la sesión
-                $_SESSION['user'] = [
+                self::$user = new User([
                     'id' => $decoded->sub,
                     'username' => $decoded->username,
-                    'role' => $decoded->role
-                ];
+                    'role' => ['name' => $decoded->role]
+                ]);
 
-                // Token válido, permite continuar
-                return;
+                $_SESSION['user'] = self::$user;
+
+                if (!empty($roles) && !in_array(self::$user->role, $roles)) {
+                    self::deny("No tienes permiso para acceder a este recurso", 403);
+                }
+
+                return true;
+
             } catch (\Exception $e) {
-                // Token inválido o expirado
-                http_response_code(401);
-                echo json_encode(['success' => false, 'message' => 'Token inválido']);
-                exit;
+                self::deny("Token inválido o expirado", 401);
             }
         }
 
-        // Obtener las cabeceras relevantes
+        self::deny("No te encuentras autenticado.", 401);
+        return false;
+    }
+
+    public static function user(): ?User
+    {
+        return self::$user ?? null;
+    }
+
+    private static function deny(string $message, int $status): void
+    {
         $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
         $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
-
-        // Comprobar si la request es JSON
         $isJsonRequest = stripos($contentType, 'application/json') !== false
                         || stripos($accept, 'application/json') !== false;
 
+        http_response_code($status);
+
         if ($isJsonRequest) {
-            // --- No hay token válido / API request ---
-            http_response_code(401);
             echo json_encode([
                 'success' => false,
-                'message' => 'No te encuentras autenticado.'
+                'message' => $message
             ]);
-            exit;
         } else {
-            // --- No hay sesión válida / Navegador ---
-            View::render('auth/Login', [
-                'error' => 'No te encuentras autenticado.'
-            ]);
-            exit;
+            if ($status === 401) {
+                View::render('auth/Login', ['error' => $message]);
+            } elseif ($status === 403) {
+                header("Location: /");
+            }
         }
+
+        exit;
     }
 }

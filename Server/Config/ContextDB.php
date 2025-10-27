@@ -28,22 +28,22 @@ class ContextDB
     /**
      * @var string Host de la base de datos
      */
-    private string $host = "localhost";
+    private string $host;
 
     /**
      * @var string Nombre de la base de datos
      */
-    private string $dbname = "example";
+    private string $dbname;
 
     /**
      * @var string Usuario de la base de datos
      */
-    private string $username = "root";
+    private string $username;
 
     /**
      * @var string Contraseña de la base de datos
      */
-    private string $password = "";
+    private string $password;
 
     /**
      * Constructor
@@ -69,14 +69,16 @@ class ContextDB
 
         if (in_array($currentHost, $localHosts) || str_contains($currentHost, '.local') || str_contains($currentHost, 'localhost')) {
             // Local
-            $this->host = 'localhost';
-            $this->username = 'root';
-            $this->password = '';
+            $this->host = $_ENV['DB_HOST_DEV'];
+            $this->username = $_ENV['DB_USER_DEV'];
+            $this->dbname = $_ENV['DB_NAME_DEV'];
+            $this->password = $_ENV['DB_PASS_DEV'];
         } else {
             // Producción
-            $this->host = 'localhost';
-            $this->username = '';
-            $this->password = '';
+            $this->host = $_ENV['DB_HOST'];
+            $this->username = $_ENV['DB_USER'];
+            $this->dbname = $_ENV['DB_NAME'];
+            $this->password = $_ENV['DB_PASS'];
         }
     }
 

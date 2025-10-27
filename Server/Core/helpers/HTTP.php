@@ -3,13 +3,16 @@
 namespace App\Core\helpers;
 
 use App\Config\Config;
+use App\Config\Jwt as jwtConfig;
+use Exception;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use Firebase\JWT\SignatureInvalidException;
 
 /**
- * Trait RequestData
+ * Trait HTTP
  * 
- * Proporciona un método protegido para obtener los datos de la solicitud HTTP.
- * Soporta tanto **formularios clásicos** (GET/POST) como **JSON** en el cuerpo
- * de la request (POST, PUT, PATCH, DELETE con `application/json`).
  */
 trait HTTP
 {
@@ -23,7 +26,7 @@ trait HTTP
      * 
      * Ejemplo de uso en un controlador:
      * ```php
-     * $data = $this->getRequestData();
+     * $data = $this->request();
      * $name = $data['name'] ?? null;
      * ```
      *
@@ -34,18 +37,31 @@ trait HTTP
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
 
-        // Si es JSON (POST, PUT, PATCH, DELETE con application/json)
-        if (stripos($contentType, 'application/json') !== false) {
-            return json_decode(file_get_contents("php://input"), true) ?? [];
+        $data = [];
+
+        // 📦 Si es multipart/form-data (subida de archivos)
+        if (stripos($contentType, 'multipart/form-data') !== false) {
+            $data = array_merge($_POST, ['_files' => $_FILES]);
+        }
+        // 📄 Si es JSON
+        elseif (stripos($contentType, 'application/json') !== false) {
+            $data = json_decode(file_get_contents("php://input"), true) ?? [];
+        }
+        // 🔹 Formularios normales
+        else {
+            if ($method === 'POST') {
+                $data = $_POST;
+            } elseif ($method === 'GET') {
+                $data = $_GET;
+            }
         }
 
-        // Manejo clásico de formularios
-        return match ($method) {
-            'GET'    => $_GET,
-            'POST'   => $_POST,
-            default  => json_decode(file_get_contents("php://input"), true) ?? []
-        };
+        // 🔹 Siempre añadir query params para GET y POST
+        $data = array_merge($data, $_GET);
+
+        return $data;
     }
+
 
     /**
      * Determina si la request actual es de tipo JSON.
@@ -116,11 +132,79 @@ trait HTTP
         http_response_code($status);
 
         // Indicar que la respuesta es JSON
-        header('Content-Type: application/json');
+        header('Content-Type: application/json; charset=utf-8');
 
         // Enviar los datos codificados en JSON
-        echo json_encode($data);
+        echo json_encode($data,  JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         exit;
+    }
+
+    /**
+     * Obtiene y valida el token Bearer enviado en la cabecera Authorization.
+     *
+     * Este método busca un header con el formato:
+     * 
+     *     Authorization: Bearer <token>
+     * 
+     * Si encuentra un token válido, lo decodifica usando la librería Firebase\JWT
+     * y devuelve el payload (normalmente un objeto con los datos del usuario).
+     *
+     * @return object|null Retorna el payload decodificado como stdClass si el token es válido,
+     *                     o null si no existe el header Authorization.
+     *
+     * @throws void Maneja internamente las excepciones y responde con JSON:
+     *              - 401 si el token está expirado o la firma es inválida.
+     *              - 400 si ocurre otro error al decodificar.
+     */
+    public function getBearerToken(): ?object {
+        // Obtener todos los headers de la petición
+        $headers = getallheaders();
+
+        // Verificar que exista el header Authorization
+        if (!isset($headers['Authorization'])) {
+            return null;
+        }
+
+        // Extraer el token si cumple con el formato "Bearer <token>"
+        if (preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
+            try {
+                // Obtener configuración JWT (clave secreta, expiración, etc.)
+                $jwt = jwtConfig::get();
+
+                // Decodificar el token usando la clave y algoritmo HS256
+                $decoded = JWT::decode(
+                    $matches[1],
+                    new Key($jwt['secret'], 'HS256')
+                );
+
+                // Retornar el payload decodificado (ej: user_id, username, role, exp, etc.)
+                return $decoded;
+
+            } catch (ExpiredException $e) {
+                // Token válido pero caducado
+                $this->response([
+                    "success" => false,
+                    'message' => 'El token ha expirado'
+                ], 401);
+
+            } catch (SignatureInvalidException $e) {
+                // Token manipulado o firmado con otra clave
+                $this->response([
+                    "success" => false,
+                    'message' => 'Firma inválida'
+                ], 401);
+
+            } catch (Exception $e) {
+                // Cualquier otro error de decodificación
+                $this->response([
+                    "success" => false,
+                    'message' => 'Token inválido'
+                ], 401);
+            }
+        }
+
+        // Si el header Authorization no tiene formato válido
+        return null;
     }
 
 }
