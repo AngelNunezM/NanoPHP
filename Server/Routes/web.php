@@ -2,7 +2,6 @@
 
 use App\Core\Router;
 use App\Controllers\HomeController;
-use App\Controllers\UserController;
 
 // ---------------------------------------------------------------------
 // Importación de módulos de rutas
@@ -19,13 +18,6 @@ use App\Controllers\UserController;
 
 require __DIR__ . '/UserRoute.php'; 
 require __DIR__ . '/AuthenticateRoute.php'; 
-require __DIR__ . '/ProjectRoute.php'; 
-require __DIR__ . '/ClientRoute.php'; 
-require __DIR__ . '/StageRoute.php'; 
-require __DIR__ . '/EvidenceRoute.php'; 
-require __DIR__ . '/ClientRoute.php'; 
-require __DIR__ . '/SettingsRoute.php'; 
-require __DIR__ . '/RoleRoute.php';
 
 // ---------------------------------------------------------------------
 // Tipado y referencia del router
