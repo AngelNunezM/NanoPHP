@@ -1,7 +1,7 @@
 {
   "name": "angelnunezm/nanophp",
   "description": "NanoPHP — A lightweight and structured microframework for PHP 8.2",
-  "type": "library",
+  "type": "project",
   "license": "MIT",
   "autoload": {
     "psr-4": {
@@ -17,5 +17,10 @@
       "name": "Angel de Jesus Nuñez Moreno",
       "email": "nunezmoreno.angeldejesus@gmail.com"
     }
-  ]
+  ],
+  "scripts": {
+    "post-create-project-cmd": [
+      "@php -r \"if (file_exists('public/index.php')) echo '✅ NanoPHP listo para usar!\\n';\""
+    ]
+  }
 }
