@@ -3,3 +3,29 @@
 @theme {
   --breakpoint-xs: 350px;
 }
+
+/* Personalización para usar .dark en lugar de media query */
+.dark [class*="dark:border-white"] {
+  border-color: color-mix(in srgb, #fff 10%, transparent) !important;
+}
+.dark [class*="dark:bg-white/5"] {
+  background-color: color-mix(in srgb, #fff 5%, transparent) !important;
+}
+.dark [class*="dark:bg-white/10"] {
+  background-color: color-mix(in srgb, #fff 10%, transparent) !important;
+}
+.dark [class*="dark:text-gray-300"] {
+  color: var(--color-gray-300) !important;
+}
+.dark [class*="dark:text-gray-400"] {
+  color: var(--color-gray-400) !important;
+}
+.dark [class*="dark:text-white"] {
+  color: var(--color-white) !important;
+}
+.dark [class*="dark:placeholder-gray-500"]::placeholder {
+  color: var(--color-gray-500) !important;
+}
+.dark [class*="dark:hover:bg-white/20"]:hover {
+  background-color: color-mix(in srgb, #fff 20%, transparent) !important;
+}

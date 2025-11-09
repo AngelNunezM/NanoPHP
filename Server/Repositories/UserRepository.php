@@ -51,7 +51,7 @@ class UserRepository {
             FROM users u
             INNER JOIN roles r
             ON r.id = u.role_id
-            WHERE $columnName = :value
+            WHERE u.$columnName = :value
             LIMIT 1;
         ");
 

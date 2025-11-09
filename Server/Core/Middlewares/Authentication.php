@@ -7,48 +7,48 @@ use Firebase\JWT\Key;
 use App\Config\Jwt as jwtConfig;
 use App\Core\View;
 use App\Models\User;
+use App\Services\UserService;
+use Exception;
 
-/**
- * Class Authentication
- *
- * Middleware para proteger rutas verificando la autenticación y autorización del usuario.
- * 
- * Este middleware verifica:
- * 1. Si existe una sesión activa de usuario.
- * 2. Si existe un token JWT válido en la cabecera Authorization.
- * 3. Si el usuario tiene los roles requeridos (opcional).
- *
- * Uso:
- * Colocar `Authentication::verify(['Rol1', 'Rol2'])` al inicio de un método de controlador o ruta protegida.
- *
- * Ejemplos:
- * - Authentication::verify(); // Solo verifica autenticación
- * - Authentication::verify(['Administrador']); // Verifica autenticación y rol específico
- */
 class Authentication
 {
-
     public static ?User $user = null;
 
     public static function verify(array $roles = []): ?bool
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         $config = jwtConfig::get();
+        $userService = new UserService(); 
+        
 
-        if (isset($_SESSION['user'])) {
-            self::$user = $_SESSION['user'];
+        $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+        $isJsonRequest = stripos($accept, 'application/json') !== false
+                      || stripos($contentType, 'application/json') !== false;
 
-            if (!empty($roles) && !in_array(self::$user->role->name, $roles)) {
-                self::deny("No tienes permiso para acceder a este recurso", 403);
+        if (!$isJsonRequest) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
             }
-            return true;
+
+            if (isset($_SESSION['user'])) {
+                self::$user = $userService->getUserById($_SESSION['user']->id);
+
+                if (!self::$user->isActive) {
+                    self::deny("Tu cuenta está inactiva", 401);
+                }
+
+                if (!empty($roles) && !in_array(self::$user->role->name, $roles)) {
+                    self::deny("No tienes permiso para acceder a este recurso", 403);
+                }
+                return true;
+            }
         }
 
         $headers = getallheaders();
-        $token = $headers['Authorization'] ?? null;
+        $token = $headers['Authorization']
+            ?? $_SERVER['HTTP_AUTHORIZATION']
+            ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+            ?? null;
 
         if ($token) {
             try {
@@ -57,21 +57,25 @@ class Authentication
                 }
 
                 $decoded = JWT::decode($token, new Key($config['secret'], 'HS256'));
+                $user = $userService->getUserById($decoded->sub);
 
-                self::$user = new User([
-                    'id' => $decoded->sub,
-                    'username' => $decoded->username,
-                    'role' => ['name' => $decoded->role]
-                ]);
+                self::$user = $user;
 
-                $_SESSION['user'] = self::$user;
+                if (!self::$user->isActive) {
+                    self::deny("Tu cuenta está inactiva", 401);
+                }
 
-                if (!empty($roles) && !in_array(self::$user->role, $roles)) {
+                // 🔹 Si es web, guarda en sesión para mantener autenticación
+                if (!$isJsonRequest) {
+                    $_SESSION['user'] = self::$user;
+                }
+
+                // 🔹 Verificar roles
+                if (!empty($roles) && !in_array(self::$user->role->name, $roles)) {
                     self::deny("No tienes permiso para acceder a este recurso", 403);
                 }
 
                 return true;
-
             } catch (\Exception $e) {
                 self::deny("Token inválido o expirado", 401);
             }

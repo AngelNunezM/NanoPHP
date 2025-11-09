@@ -2,6 +2,7 @@
 
 use App\Core\Router;
 use App\Controllers\HomeController;
+use App\Controllers\UserController;
 
 // ---------------------------------------------------------------------
 // Importación de módulos de rutas
@@ -16,7 +17,6 @@ use App\Controllers\HomeController;
  *  - ProjectRoute.php      -> Maneja rutas relacionadas con proyectos.
  */
 
-require __DIR__ . '/UserRoute.php'; 
 require __DIR__ . '/AuthenticateRoute.php'; 
 
 // ---------------------------------------------------------------------
